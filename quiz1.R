@@ -1,6 +1,15 @@
 getwd()
+#for Dater
 setwd("/home/brian/Projects/Coursera/GetAndCleanData")
-dir.create("./data/")
+
+#for dater_bridge
+setwd("C:\\Users\\Brian\\Documents\\Projects\\GetClean")
+
+if (!file.exists("data")) {
+  dir.create("data")
+}
+
+
 download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv",destfile="./data/Housing.csv")
 #("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf" for variable desc
 house<-read.csv("./data/Housing.csv")
@@ -15,17 +24,22 @@ if (!file.exists("data")) {
   dir.create("data")
 }
 fileURL<-"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx"
-download.file(fileURL,destfile="./data/getdata-data-DATA.gov_NGAP.xlsx",method="curl",mode="wb")
+download.file(fileURL,destfile="./data/getdata-data-DATA.gov_NGAP.xlsx",mode="wb")
 dateDownloaded<-date()
 list.files("./data")
-install.packages("xlsx")
-library(xlsx)
+install.packages("openxlsx")
+library(openxlsx)
 
 colIndex<-7:15
 rowIndex<-18:23
-dat<-read.xlsx("./data/getdata-data-DATA.gov_NGAP.xlsx",sheetIndex=1,colIndex=colIndex,rowIndex=rowIndex,header=T)
+dat<-read.xlsx("./data/getdata-data-DATA.gov_NGAP.xlsx",sheet = 1, startRow=18)
+dat<-dat[1:6,colIndex]
+head(dat)
+str(dat)
 
-sum(dat$Zip*dat$Ext,na.rm=T) 
+#####
+#should I change char to numeric to do quiz question?
+sum(as.numeric(dat$Zip)*as.numeric(dat$Ext),na.rm=T) 
 
 ##Q4
 install.packages("XML")
