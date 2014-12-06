@@ -2,6 +2,9 @@ getwd()
 #for Dater
 setwd("/home/brian/Projects/Coursera/GetAndCleanData")
 
+#for latitude
+setwd("/home/brian/Projects/Coursera/GetAndClean")
+
 #for dater_bridge
 setwd("C:\\Users\\Brian\\Documents\\Projects\\GetClean")
 
@@ -37,8 +40,6 @@ dat<-dat[1:6,colIndex]
 head(dat)
 str(dat)
 
-#####
-#should I change char to numeric to do quiz question?
 sum(as.numeric(dat$Zip)*as.numeric(dat$Ext),na.rm=T) 
 
 ##Q4
@@ -46,6 +47,7 @@ install.packages("XML")
 library(XML)
 
 doc<-xmlTreeParse("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml",useInternal=T)
+
 rootNode<-xmlRoot(doc)
 xmlName(rootNode)
 names(rootNode)
@@ -60,16 +62,22 @@ table(zip==21231)
 
 install.packages("data.table")
 library(data.table)
-download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv",destfile="idahoHousing.csv")
+download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv",destfile="./data/idahoHousing.csv")
 DT<-fread("./data/idahoHousing.csv")
-
+head(DT)
 system.time(rowMeans(DT)[DT$SEX==1])
+system.time(mean(DT$pwgtp15,by=DT$SEX))
+system.time(tapply(DT$pwgtp15,DT$SEX,mean))
+system.time(DT[,mean(DT$pwgtp15),by=SEX])
+system.time(mean(DT[DT$SEX==1,]$pwgtp15); mean(DT[DT$SEX==2,]$pwgtp15))
+system.time(sapply(split(DT$pwgtp15,DT$SEX),mean))
+system.time(rowMeans(DT)[DT$SEX==1]); system.time(DT$SEX,mean)rowMeans(DT)[DT$SEX==2]))
 
-mean(DT$pwgtp15,by=DT$SEX)
-tapply(DT$pwgtp15,DT$SEX,mean)
-DT[,mean(pwgtp15),by=SEX]
-mean(DT[DT$SEX==1,]$pwgtp15); mean(DT[DT$SEX==2,]$pwgtp15)
+
 sapply(split(DT$pwgtp15,DT$SEX),mean)
+DT[,mean(pwgtp15),by=SEX]
+mean(DT$pwgtp15,by=DT$SEX)
+mean(DT[DT$SEX==1,]$pwgtp15); mean(DT[DT$SEX==2,]$pwgtp15)
 rowMeans(DT)[DT$SEX==1]; rowMeans(DT)[DT$SEX==2]
-
+tapply(DT$pwgtp15,DT$SEX,mean) 
 
