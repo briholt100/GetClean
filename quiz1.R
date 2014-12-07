@@ -26,7 +26,7 @@ str(house$FES)
 if (!file.exists("data")) {
   dir.create("data")
 }
-fileURL<-"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx"
+fileURL<-"http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx"
 download.file(fileURL,destfile="./data/getdata-data-DATA.gov_NGAP.xlsx",mode="wb")
 dateDownloaded<-date()
 list.files("./data")
@@ -73,11 +73,12 @@ system.time(mean(DT[DT$SEX==1,]$pwgtp15); mean(DT[DT$SEX==2,]$pwgtp15))
 system.time(sapply(split(DT$pwgtp15,DT$SEX),mean))
 system.time(rowMeans(DT)[DT$SEX==1]); system.time(DT$SEX,mean)rowMeans(DT)[DT$SEX==2]))
 
-
-sapply(split(DT$pwgtp15,DT$SEX),mean)
+A<-replicate(1000,system.time(sapply(split(DT$pwgtp15,DT$SEX),mean)))
 DT[,mean(pwgtp15),by=SEX]
 mean(DT$pwgtp15,by=DT$SEX)
 mean(DT[DT$SEX==1,]$pwgtp15); mean(DT[DT$SEX==2,]$pwgtp15)
 rowMeans(DT)[DT$SEX==1]; rowMeans(DT)[DT$SEX==2]
 tapply(DT$pwgtp15,DT$SEX,mean) 
 
+plot(A[3,])
+cumsum(A)
