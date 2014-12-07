@@ -65,20 +65,38 @@ library(data.table)
 download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv",destfile="./data/idahoHousing.csv")
 DT<-fread("./data/idahoHousing.csv")
 head(DT)
-system.time(rowMeans(DT)[DT$SEX==1])
-system.time(mean(DT$pwgtp15,by=DT$SEX))
-system.time(tapply(DT$pwgtp15,DT$SEX,mean))
-system.time(DT[,mean(DT$pwgtp15),by=SEX])
-system.time(mean(DT[DT$SEX==1,]$pwgtp15); mean(DT[DT$SEX==2,]$pwgtp15))
-system.time(sapply(split(DT$pwgtp15,DT$SEX),mean))
-system.time(rowMeans(DT)[DT$SEX==1]); system.time(DT$SEX,mean)rowMeans(DT)[DT$SEX==2]))
 
-A<-replicate(1000,system.time(sapply(split(DT$pwgtp15,DT$SEX),mean)))
-DT[,mean(pwgtp15),by=SEX]
-mean(DT$pwgtp15,by=DT$SEX)
-mean(DT[DT$SEX==1,]$pwgtp15); mean(DT[DT$SEX==2,]$pwgtp15)
-rowMeans(DT)[DT$SEX==1]; rowMeans(DT)[DT$SEX==2]
-tapply(DT$pwgtp15,DT$SEX,mean) 
+A<-replicate(1000,system.time(sapply(split(DT$pwgtp15,DT$SEX),mean))[1])
+B<-replicate(1000,system.time(DT[,mean(pwgtp15),by=SEX])[1])
+C<-replicate(1000,system.time(mean(DT$pwgtp15,by=DT$SEX))[1])
+D<-replicate(1000,system.time(tapply(DT$pwgtp15,DT$SEX,mean))[1])
+E<-replicate(1000,system.time(c(mean(DT[DT$SEX==1,]$pwgtp15), mean(DT[DT$SEX==2,]$pwgtp15)))[1])
+F<-replicate(1000,system.time(c(rowMeans(DT)[DT$SEX==1], rowMeans(DT)[DT$SEX==2]))[1])
 
-plot(A[3,])
-cumsum(A)
+
+
+race=c(A,B,C,D,E,F)
+par(mfrow=c(3,2))
+for(i in 1:length(race)){plot(race[i])}
+par(mfrow=c(1,1))
+
+A_av = cumsum(A) / seq_along(A)
+B_av = cumsum(B) / seq_along(B)
+C_av = cumsum(C) / seq_along(C)
+D_av = cumsum(D) / seq_along(D)
+E_av = cumsum(E) / seq_along(E)
+F_av = cumsum(F) / seq_along(F)
+
+topY = max(A_av, B_av, C_av, D_av, E_av, F_av) #making sure the y axis is the right height
+lowY = min(A_av, B_av, C_av, D_av, E_av, F_av) #making sure the y axis is the right height
+
+topY = max(A_av, B_av, D_av, F_av) #making sure the y axis is the right height
+lowY = min(A_av, B_av, D_av,  F_av) #making sure the y axis is the right height
+
+plot(A_av, type="l", col=1, ylim=c(lowY,topY), xlab="distance", ylab="average time")
+lines(B_av, col=2)
+lines(C_av, col=3)
+lines(D_av, col=4)
+lines(E_av, col=5)
+lines(F_av, col=6)
+legend("topright",legend=c("A","B","C","D","E","F"),lty=c(1,1,1,1,1,1),col=c(1,2,3,4,5,6)) # gives the legend lines the correct color and width
