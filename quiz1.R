@@ -1,3 +1,4 @@
+library(ggplot2)
 getwd()
 #for Dater
 setwd("/home/brian/Projects/Coursera/GetAndCleanData")
@@ -7,6 +8,10 @@ setwd("/home/brian/Projects/Coursera/GetAndClean")
 
 #for dater_bridge
 setwd("C:\\Users\\Brian\\Documents\\Projects\\GetClean")
+
+#for campus
+setwd("I:\\My Data Sources\\mooc\\GetCleanData")
+
 
 if (!file.exists("data")) {
   dir.create("data")
@@ -62,7 +67,7 @@ table(zip==21231)
 
 install.packages("data.table")
 library(data.table)
-download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv",destfile="./data/idahoHousing.csv")
+download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv",destfile="./data/idahoHousing.csv")
 DT<-fread("./data/idahoHousing.csv")
 head(DT)
 
@@ -92,11 +97,29 @@ lowY = min(A_av, B_av, C_av, D_av, E_av, F_av) #making sure the y axis is the ri
 
 topY = max(A_av, B_av, D_av, F_av) #making sure the y axis is the right height
 lowY = min(A_av, B_av, D_av,  F_av) #making sure the y axis is the right height
-
+par(mfrow=c(1,2))
 plot(A_av, type="l", col=1, ylim=c(lowY,topY), xlab="distance", ylab="average time")
 lines(B_av, col=2)
 lines(C_av, col=3)
 lines(D_av, col=4)
 lines(E_av, col=5)
-lines(F_av, col=6)
+#lines(F_av, col=6)
 legend("topright",legend=c("A","B","C","D","E","F"),lty=c(1,1,1,1,1,1),col=c(1,2,3,4,5,6)) # gives the legend lines the correct color and width
+
+
+
+horseRace<-data.table(cbind(A_av,
+                      B_av,
+                      C_av,
+                      D_av,
+                      E_av,
+                      F_av)
+                    )
+tail(horseRace)
+
+graph<-ggplot(horseRace,aes(y=A_av,x=seq_along(A_av),color=1))
+graph+geom_line()+
+  geom_line(aes(y=B_av,x=seq_along(B_av),color=2))+
+  geom_line(aes(y=C_av,x=seq_along(C_av),color=3))+
+  geom_line(aes(y=D_av,x=seq_along(D_av),color=4))+
+  geom_line(aes(y=E_av,x=seq_along(E_av),color=5))
