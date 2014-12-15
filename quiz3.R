@@ -38,7 +38,7 @@ quantile(leekPhoto,probs=seq(0,1,.1))
 #q3
 download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv",destfile="./data/gdp.csv")
 #https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf 
-gdp<-read.csv("./data/gdp.csv",skip=5,nrows=190,col.names=c("Country.code","Ranking","v3","Economy","dollars","v6","v7","v8","v9","v10"))
+gdp<-read.csv("./data/gdp.csv",skip=4,nrows=190,col.names=c("CountryCode","Ranking","v3","Country","dollars","v6","v7","v8","v9","v10"))
 gdp<-gdp[,c(1:2,4:5)]
 str(gdp)
 
@@ -46,14 +46,32 @@ download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Cou
 #https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf 
 edu<-read.csv("./data/edu.csv",header=T)
 str(edu)
-
-intersect(gdp[,1],edu[,1])
+names(edu)
+table(edu$"Income.Group")
+sort(gdp$CountryCode)
 names(gdp)
+sort(intersect(gdp[,3],edu[,31]))
 
-table(edu[,31] %in% gdp[,"X.2"])
+table(edu[,31] %in% gdp[,"Country"])
 table(edu[,1] %in% gdp[,1])
+table( gdp[,1] %in% edu[,1])
 head(gdp)
-df<-merge(edu,gdp,by.y="X.2", by.x="Short.Name")
-names(df)
-df[order(df[,33],decreasing=T),]
 
+df<-merge(edu,gdp,by.x="CountryCode", by.y="CountryCode")
+names(df)
+df<-df[order(df[,32],decreasing=T),]
+head(df,13)
+
+#q4
+
+tapply(df$Ranking,df$Income.Group,mean)
+
+#q5
+
+df$GdpGroups<-cut(df$Ranking,breaks=quantile(df$Ranking,probs=seq(0,1,.2)))
+head(df)
+table(df$GdpGroups)
+table(df$GdpGroups,df$Income.Group)
+
+"how many are lower middle income but amount top 38 ranking?"
+df[df$Ranking < 39 & df$Income.Group == "Lower middle income",31]
