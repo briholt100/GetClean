@@ -38,14 +38,17 @@ quantile(leekPhoto,probs=seq(0,1,.1))
 #q3
 download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv",destfile="./data/gdp.csv")
 #https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf 
-gdp<-read.csv("./data/gdp.csv")
+gdp<-read.csv("./data/gdp.csv",skip=5,nrows=190,col.names=c("Country.code","Ranking","v3","Economy","dollars","v6","v7","v8","v9","v10"))
+gdp<-gdp[,c(1:2,4:5)]
+str(gdp)
 
 download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv",destfile="./data/edu.csv")
 #https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf 
-edu<-read.csv("./data/edu.csv")
+edu<-read.csv("./data/edu.csv",header=T)
+str(edu)
 
-head(gdp)
-names(edu)
+intersect(gdp[,1],edu[,1])
+names(gdp)
 
 table(edu[,31] %in% gdp[,"X.2"])
 table(edu[,1] %in% gdp[,1])
@@ -53,3 +56,4 @@ head(gdp)
 df<-merge(edu,gdp,by.y="X.2", by.x="Short.Name")
 names(df)
 df[order(df[,33],decreasing=T),]
+
