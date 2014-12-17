@@ -1,11 +1,18 @@
 getwd()
+#for latitutde
 setwd("/home/brian/Projects/Coursera/GetAndClean/data/UCI HAR Dataset/")
 dir()
 
+#for dater
+setwd("/home/brian/Projects/Coursera/GetAndCleanData/data/UCI HAR Dataset")
+
 Activities<-read.table("./activity_labels.txt",sep="")
-Features<- t(read.csv("./features.txt",sep=""))
-class(Features)
-grep("mean",Features,ignore.case=T,value=T)
+Features<- read.csv("./features.txt",sep="")
+Features[,2]
+table1<-sort(table((Features[,2])))
+table1[table1>1]
+
+grep("mean|std",Features,ignore.case=T,value=T)
 grep("std",Features,ignore.case=T,value=T)
 
 ########
@@ -31,8 +38,11 @@ test_set$Set<-1
 train_set$Set<-0
 
 ###Merge test and train set, then sort by 1st column (subject)
-full_data<-rbind(test_set,train_set)head(full_data)
-full_data[order(full_data[,1]),]
+full_data<-rbind(test_set,train_set)
+dim(full_data)
+full_data<-full_data[order(full_data[,1]),]
+
+#next step, make column names, then tapply accros subject and activity.
 
 #####
 #Rename columns
