@@ -6,12 +6,12 @@ dir()
 #for dater
 setwd("/home/brian/Projects/Coursera/GetAndCleanData/data/UCI HAR Dataset")
 
-Activities<-read.table("./activity_labels.txt",sep="")
-Features<- read.csv("./features.txt",sep="")
-Features[,2]
-table1<-sort(table((Features[,2])))
-table1[table1>1]
+Activities<-read.table("./activity_labels.txt",sep="") #lists activities by name
+Features<- read.csv("./features.txt",sep="") #561 list of features
+table1<-sort(table((Features[,2]))) #creates table to find duplicates
+table1[table1>1] #lists duplicates; none have "mean" or "std"
 
+grep("mean|std",names(table1[table1>1]),ignore.case=T)
 grep("mean|std",Features,ignore.case=T,value=T)
 grep("std",Features,ignore.case=T,value=T)
 
