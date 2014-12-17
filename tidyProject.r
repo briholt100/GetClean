@@ -7,7 +7,7 @@ dir()
 setwd("/home/brian/Projects/Coursera/GetAndCleanData/data/UCI HAR Dataset")
 
 Activities<-read.table("./activity_labels.txt",sep="")
-Features<- read.csv("./features.txt",sep="")
+Features<- read.csv("./features.txt",sep="",header=F)
 Features[,2]
 table1<-sort(table((Features[,2])))
 table1[table1>1]
@@ -42,7 +42,17 @@ full_data<-rbind(test_set,train_set)
 dim(full_data)
 full_data<-full_data[order(full_data[,1]),]
 
-#next step, make column names, then tapply accros subject and activity.
 
 #####
 #Rename columns
+fullColNames<-make.names(Features[,2],unique=T)
+fullColNames<-c("Subject","Activity",fullColNames,"Set")
+colnames(full_data)<-fullColNames
+names(full_data)
+
+KeptColumns<-grep("subject|activity|mean|std|set",fullColNames,ignore.case=T,value=F)
+tidy<-full_data[,KeptColumns]
+
+
+######
+#melt the data
