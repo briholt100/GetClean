@@ -7,6 +7,9 @@ dir()
 setwd("/home/brian/Projects/Coursera/GetAndCleanData/data/UCI HAR Dataset")
 
 
+#for windater
+setwd("C:\\Users\\Brian\\Documents\\Projects\\GetClean\\data\\UCI HAR Dataset")
+
 ########
 ######
 #Create Table for Test Data 
