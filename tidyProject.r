@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 getwd()
 #for latitutde
 setwd("/home/brian/Projects/Coursera/GetAndClean/data/UCI HAR Dataset/")
@@ -164,6 +163,3 @@ dcast(tidyMelt,Subject+Activity ~ variable,mean)
 #also make Readme and a markdown file. 
 
 
-
-
->>>>>>> ae7864de7a311bdc60d6e39ac37d0970e379adf8
