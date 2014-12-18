@@ -67,10 +67,7 @@ tidy$Activity<-with(tidy,ifelse(tidy$Activity==1,"Walk",
 #melt the data
 library("reshape2")
 
-
 names(tidy)
-
-
 
 tidyMelt<-melt(tidy,id.vars=c("Subject","Activity"),measure.vars=c(tidy[,3:88]))
 dcast(tidyMelt,Subject+Activity ~ variable,mean)
