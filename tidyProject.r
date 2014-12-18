@@ -51,7 +51,7 @@ grep("mean|std",Features[,2],ignore.case=T,value=T)
 fullColNames<-make.names(Features[,2],unique=T)
 fullColNames<-c("Subject","Activity",fullColNames,"Set")
 colnames(full_data)<-fullColNames
-names(full_data)
+head(names(full_data))
 
 KeptColumns<-grep("subject|activity|mean|std|set",fullColNames,ignore.case=T,value=F)
 tidy<-full_data[,KeptColumns]
@@ -65,5 +65,19 @@ tidy$Activity<-with(tidy,ifelse(tidy$Activity==1,"Walk",
 
 ######
 #melt the data
+library("reshape2")
 
-aggregate(x=tidy[,-89], by = list(tidy$Subject,tidy$Activity), FUN="mean")
+
+names(tidy)
+
+
+
+tidyMelt<-melt(tidy,id.vars=c("Subject","Activity"),measure.vars=c(tidy[,3:88]))
+dcast(tidyMelt,Subject+Activity ~ variable,mean)
+
+#last bit to do: Do the above but for all variables, also, rename varialbes?
+#also make Readme and a markdown file. 
+
+
+
+
