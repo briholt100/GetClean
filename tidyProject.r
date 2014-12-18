@@ -154,9 +154,12 @@ library("reshape2")
 
 names(tidy)
 
+head(tidy)
+by(tidy,c(tidy$Subject), function(x) colMeans(tidy[,3:88]))#works, but not what I need.
+aggregate(data=tidy,.~Subject+Activity, mean)
 
 
-tidyMelt<-melt(tidy,id.vars=c("Subject","Activity"),measure.vars=c(tidy[,3:88]))
+tidyMelt<-melt(tidy,id.vars=c("Subject","Activity"),measure.vars=c(tidy[,3:88]))# too computationally heavy
 dcast(tidyMelt,Subject+Activity ~ variable,mean)
 
 #last bit to do: Do the above but for all variables, also, rename varialbes?
