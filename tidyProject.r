@@ -6,14 +6,6 @@ dir()
 #for dater
 setwd("/home/brian/Projects/Coursera/GetAndCleanData/data/UCI HAR Dataset")
 
-Activities<-read.table("./activity_labels.txt",sep="") #lists activities by name
-Features<- read.csv("./features.txt",sep="",header=F) #561 list of features
-table1<-sort(table((Features[,2]))) #creates table to find duplicates
-table1[table1>1] #lists duplicates; none have "mean" or "std"
-
-grep("mean|std",names(table1[table1>1]),ignore.case=T)
-grep("mean|std",Features,ignore.case=T,value=T)
-grep("std",Features,ignore.case=T,value=T)
 
 ########
 ######
@@ -43,8 +35,19 @@ dim(full_data)
 full_data<-full_data[order(full_data[,1]),]
 
 
+####
+#Varialbes name manipulation
+
+Activities<-read.table("./activity_labels.txt",sep="") #lists activities by name
+Features<- read.csv("./features.txt",sep="",header=F) #561 list of features
+table1<-sort(table((Features[,2])),decreasing=T) #creates table to find duplicates
+table1[table1>1] #lists duplicates; none have "mean" or "std"
+
+grep("mean|std",names(table1[table1>1]),ignore.case=T) #confirms list doesn't contain mean/std
+grep("mean|std",Features[,2],ignore.case=T,value=T)
+
 #####
-#Rename columns
+#Rename columns and activity
 fullColNames<-make.names(Features[,2],unique=T)
 fullColNames<-c("Subject","Activity",fullColNames,"Set")
 colnames(full_data)<-fullColNames
@@ -53,6 +56,14 @@ names(full_data)
 KeptColumns<-grep("subject|activity|mean|std|set",fullColNames,ignore.case=T,value=F)
 tidy<-full_data[,KeptColumns]
 
+tidy$Activity<-with(tidy,ifelse(tidy$Activity==1,"Walk",
+                                         ifelse(tidy$Activity==2,"Walk_Up",
+                                                ifelse(tidy$Activity==3,"Walk_Down",
+                                                       ifelse(tidy$Activity==4,"Sit",
+                                                              ifelse(tidy$Activity==5,"Stand","Lay"))))))
+
 
 ######
 #melt the data
+
+aggregate(x=tidy[,-89], by = list(tidy$Subject,tidy$Activity), FUN="mean")
