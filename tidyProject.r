@@ -1,3 +1,24 @@
+##########3
+#Issues to consider:
+# Change feature/variable names?
+# include all variables with term "mean|std", or should I exclude the few mentioned in FAQ
+#create markdown file
+#create readme
+#create code book. 
+
+
+
+
+
+
+library("dplyr")
+library("tidyr")
+
+
+
+
+
+
 getwd()
 #for latitutde
 setwd("/home/brian/Projects/Coursera/GetAndClean/data/UCI HAR Dataset/")
@@ -70,8 +91,6 @@ tidy$Activity<-with(tidy,ifelse(tidy$Activity==1,"Walk",
 
 ######
 #melt the data
-library("dplyr")
-library("tidyr")
 
 long_tidy<-gather(data=tidy,feature, value, tBodyAcc.mean...X:angle.Z.gravityMean. , na.rm = TRUE)
 
