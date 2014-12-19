@@ -59,6 +59,8 @@ head(names(full_data))
 KeptColumns<-grep("subject|activity|mean|std",fullColNames,ignore.case=T,value=F)
 tidy<-full_data[,KeptColumns]
 
+str(tidy)
+
 tidy$Activity<-with(tidy,ifelse(tidy$Activity==1,"Walk",
                                          ifelse(tidy$Activity==2,"Walk_Up",
                                                 ifelse(tidy$Activity==3,"Walk_Down",
@@ -69,13 +71,17 @@ tidy$Activity<-with(tidy,ifelse(tidy$Activity==1,"Walk",
 ######
 #melt the data
 library("reshape2")
+library("dplyr")
+library("tidyr")
 
+filter(tidy,)
+summarize(tidy,mean(tidy[,1]))
 
 names(tidy)
 
-head(tidy)
-by(tidy,c(tidy$Subject), function(x) colMeans(tidy[,3:88]))#works, but not what I need.
-final_data<-(aggregate(data=tidy,.~Subject+Activity, mean))
+
+head(by(tidy,c(tidy$Subject), function(x) colMeans(tidy[,3:88])))#works, but not what I need.)
+#final_data<-(aggregate(data=tidy,.~Subject+Activity, mean))    crashes
 head(final_data[sort(final_data[,1]),])
 
 #tidyMelt<-melt(tidy,id.vars=c("Subject","Activity"),measure.vars=c(tidy[,3:88]))# too computationally heavy
