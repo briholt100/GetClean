@@ -70,24 +70,14 @@ tidy$Activity<-with(tidy,ifelse(tidy$Activity==1,"Walk",
 
 ######
 #melt the data
-library("reshape2")
 library("dplyr")
 library("tidyr")
 
-filter(tidy,)
-summarize(tidy,mean(tidy[,1]))
+long_tidy<-gather(data=tidy,feature, value, tBodyAcc.mean...X:angle.Z.gravityMean. , na.rm = TRUE)
 
-names(tidy)
+final<-summarize(group_by(long_tidy,Subject,Activity,feature),mean(value))
 
-
-head(by(tidy,c(tidy$Subject), function(x) colMeans(tidy[,3:88])))#works, but not what I need.)
-#final_data<-(aggregate(data=tidy,.~Subject+Activity, mean))    crashes
-head(final_data[sort(final_data[,1]),])
-
-#tidyMelt<-melt(tidy,id.vars=c("Subject","Activity"),measure.vars=c(tidy[,3:88]))# too computationally heavy
-#dcast(tidyMelt,Subject+Activity ~ variable,mean)
-
-#last bit to do: Do the above but for all variables, also, rename varialbes?
-#also make Readme and a markdown file. 
+#quick sanity check to see if this data produces similar data to that posted in FAQ by "Brandon"
+final[final$Subject == 1 ,]
 
 
