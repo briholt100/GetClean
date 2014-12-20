@@ -109,7 +109,7 @@ final<-summarize(group_by(long_tidy,Subject,Activity,Feature),mean(value))
 str(final)
 
 ########################################################################
-#melt the data using non-dplyr methods, wide form
+#melt the data using non-dplyr methods, first wide, then narrow/long
 ########################################################################
 
 test<-aggregate(tidy[,3:88], by = c(list(tidy$Activity), list(tidy$Subject)),mean)
@@ -117,11 +117,10 @@ test<-test[,c(2,1,3:88)] # reorders data.frame putting subject 1st
 names(test)[names(test) == 'Group.2'] <- 'Subject'
 names(test)[names(test) == 'Group.1'] <- 'Activity'
 
+narrowTest<-melt(test, id.vars =  c("Subject","Activity"),variable.name ="Feature")
+head(narrowTest,31)
 
-
-
-
-
+WideTidyTest<-dcast(narrowTest, Subject + Activity ~ Feature,mean)
 
 ########################################################################
 #quick sanity check to see if this data produces same 
