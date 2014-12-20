@@ -19,17 +19,17 @@
 ########################################################################
 getwd()
 ###
-setwd("Insert your directory location here/UCI HAR Dataset/")
+#setwd("Insert your directory location here/UCI HAR Dataset/")
 
 
 #for latitutde
-setwd("/home/brian/Projects/Coursera/GetAndClean/data/UCI HAR Dataset/")
+#setwd("/home/brian/Projects/Coursera/GetAndClean/data/UCI HAR Dataset/")
 
 #for dater
-setwd("/home/brian/Projects/Coursera/GetAndCleanData/data/UCI HAR Dataset")
+#setwd("/home/brian/Projects/Coursera/GetAndCleanData/data/UCI HAR Dataset")
 
 #for windater
-setwd("C:\\Users\\Brian\\Documents\\Projects\\GetClean\\data\\UCI HAR Dataset")
+#setwd("C:\\Users\\Brian\\Documents\\Projects\\GetClean\\data\\UCI HAR Dataset")
 
 ########################################################################
 #libraries needed; be sure these packages are first installed 
@@ -38,6 +38,7 @@ setwd("C:\\Users\\Brian\\Documents\\Projects\\GetClean\\data\\UCI HAR Dataset")
 #install.packages("tidyr")
 library("dplyr")
 library("tidyr")
+library("reshape2")
 
 ########################################################################
 #Create Table for Test Data 
@@ -51,6 +52,11 @@ test_set<-cbind(subject_test,Y_test,X_test)
 #Create Table for train Data 
 ########################################################################
 subject_train<-read.table("./train/subject_train.txt",sep="")
+#
+#This next step may take some time to execute
+#
+####
+#
 X_train<-read.table("./train/X_train.txt",sep="")
 Y_train<-read.table("./train/y_train.txt",sep="")
 train_set<-cbind(subject_train,Y_train,X_train)
@@ -74,7 +80,7 @@ full_data<-full_data[order(full_data[,1]),]
 Activities<-read.table("./activity_labels.txt",sep="") #lists activities by name
 Features<- read.csv("./features.txt",sep="",header=F) #561 list of features
 table1<-sort(table((Features[,2])),decreasing=T) #creates table to find duplicates
-table1[table1>1] #lists duplicates; none have "mean" or "std"
+#table1[table1>1] #lists duplicates; none have "mean" or "std"
 
 ########################################################################
 #Rename columns
@@ -106,30 +112,32 @@ tidy$Activity<-with(tidy,
 ########################################################################
 long_tidy<-gather(data=tidy,Feature, value, tBodyAcc.mean...X:angle.Z.gravityMean. , na.rm = TRUE)
 final<-summarize(group_by(long_tidy,Subject,Activity,Feature),mean(value))
-str(final)
+#str(final)
+final
 
 ########################################################################
 #melt the data using non-dplyr methods, first wide, then narrow/long
 ########################################################################
 
-test<-aggregate(tidy[,3:88], by = c(list(tidy$Activity), list(tidy$Subject)),mean)
-test<-test[,c(2,1,3:88)] # reorders data.frame putting subject 1st
-names(test)[names(test) == 'Group.2'] <- 'Subject'
-names(test)[names(test) == 'Group.1'] <- 'Activity'
+#test<-aggregate(tidy[,3:88], by = c(list(tidy$Activity), list(tidy$Subject)),mean)
+#test<-test[,c(2,1,3:88)] # reorders data.frame putting subject 1st
+#names(test)[names(test) == 'Group.2'] <- 'Subject'
+#names(test)[names(test) == 'Group.1'] <- 'Activity'
 
-narrowTest<-melt(test, id.vars =  c("Subject","Activity"),variable.name ="Feature")
-head(narrowTest,31)
+#narrowTest<-melt(test, id.vars =  c("Subject","Activity"),variable.name ="Feature")
+#head(narrowTest,31)
 
-WideTidyTest<-dcast(narrowTest, Subject + Activity ~ Feature,mean)
+#WideTidyTest<-dcast(narrowTest, Subject + Activity ~ Feature,mean)
 
 ########################################################################
 #quick sanity check to see if this data produces same 
 #data (albeit formated diffently) to that posted in FAQ by "Brandon"
-final[final$Subject==1,]
-test[test$Subject==1 ,]
+#final[final$Subject==1,]
+#test[test$Subject==1 ,]
 
 ########################################################################
 ###creating sharable file
 ########################################################################
-write.table(final,file = "./finalTidyData.txt",row.name=FALSE)
+
+#write.table(final,file = "./finalTidyData.txt",row.name=FALSE)
 
