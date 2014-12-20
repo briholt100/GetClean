@@ -38,7 +38,7 @@ getwd()
 #install.packages("tidyr")
 library("dplyr")
 library("tidyr")
-library("reshape2")
+library("knitr")
 
 ########################################################################
 #Create Table for Test Data 
