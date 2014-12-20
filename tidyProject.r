@@ -109,17 +109,25 @@ final<-summarize(group_by(long_tidy,Subject,Activity,Feature),mean(value))
 str(final)
 
 ########################################################################
-#melt the data using non-dplyr methods
+#melt the data using non-dplyr methods, wide form
 ########################################################################
 
 test<-aggregate(tidy[,3:88], by = c(list(tidy$Activity), list(tidy$Subject)),mean)
-test<-test[,c(2,1,3:88)]
-names(test)
+test<-test[,c(2,1,3:88)] # reorders data.frame putting subject 1st
+names(test)[names(test) == 'Group.2'] <- 'Subject'
+names(test)[names(test) == 'Group.1'] <- 'Activity'
+
+
+
+
+
+
+
 ########################################################################
 #quick sanity check to see if this data produces same 
 #data (albeit formated diffently) to that posted in FAQ by "Brandon"
 final[final$Subject==1,]
-test[test$Group.2==1,]
+test[test$Subject==1 ,]
 
 ########################################################################
 ###creating sharable file
