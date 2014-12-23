@@ -31,9 +31,11 @@ strsplit(names(idaho),"wgtp")
 #q2
 download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv",destfile="./data/gdp.csv")
 #https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf 
-gdp<-read.csv("./data/gdp.csv",skip=4,nrows=190,col.names=c("CountryCode","Ranking","v3","Country","dollars","v6","v7","v8","v9","v10"))
+gdp<-read.csv("./data/gdp.csv",skip=4,nrows=190
+              ,col.names=c("CountryCode","Ranking","v3","Country","dollars","v6","v7","v8","v9","v10")
+              )
 
-head(gdp)
+summary(gdp)
 
 gdp<-gdp[,c(1:2,4:5)]
 str(gdp)
@@ -50,16 +52,16 @@ grep("^United",gdp$Country[-c(99,186)]), 2
 
 
 
-
+#q4
 download.file("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv",destfile="./data/edu.csv")
 #https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FPUMSDataDict06.pdf 
 edu<-read.csv("./data/edu.csv",header=T)
 str(edu)
-names(edu)
-table(edu$"Income.Group")
-sort(gdp$CountryCode)
-names(gdp)
-sort(intersect(gdp[,3],edu[,31]))
+summary(edu)
+
+
+summary(edu[,c(grep("late",names(edu),ignore.case=T))])
+
 
 table(edu[,31] %in% gdp[,"Country"])
 table(edu[,1] %in% gdp[,1])
@@ -68,19 +70,23 @@ head(gdp)
 
 df<-merge(edu,gdp,by.x="CountryCode", by.y="CountryCode")
 names(df)
-df<-df[order(df[,32],decreasing=T),]
-head(df,13)
+text = c("june","FY")
+df[grep("june",df[,10],ignore.case=T),c(10)]
+df[grep("FY",df[,10],ignore.case=F),c(10)]
 
-#q4
+df[grep(text,df[,10],ignore.case=T),c(10)]
 
-tapply(df$Ranking,df$Income.Group,mean)
+
+
 
 #q5
+library(quantmod)
+amzn = getSymbols("AMZN",auto.assign=FALSE)
+sampleTimes = index(amzn) 
 
-df$GdpGroups<-cut(df$Ranking,breaks=quantile(df$Ranking,probs=seq(0,1,.2)))
-head(df)
-table(df$GdpGroups)
-table(df$GdpGroups,df$Income.Group)
+length(grep("2012",sampleTimes))
 
-"how many are lower middle income but amount top 38 ranking?"
-df[df$Ranking < 39 & df$Income.Group == "Lower middle income",31]
+dates<-grep("2012",sampleTimes,value=T)
+
+length(dates[wday(dates)==2])
+
