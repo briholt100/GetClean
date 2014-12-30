@@ -141,3 +141,7 @@ final
 
 #write.table(final,file = "./finalTidyData.txt",row.name=FALSE)
 
+
+tapply(test[,3],test$Subject,mean)
+mapply(mean,test[,3])
+by(test,test[,1:2], function(x) sapply(test[,3:88],mean))
