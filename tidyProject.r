@@ -122,7 +122,7 @@ final
 #test<-aggregate(tidy[,3:88], by = c(list(tidy$Activity), list(tidy$Subject)),mean)
 #test<-test[,c(2,1,3:88)] # reorders data.frame putting subject 1st
 #names(test)[names(test) == 'Group.2'] <- 'Subject'
-#names(test)[names(test) == 'Group.1'] <- 'Activity'
+#names(test)[names(test) == 'Group.1'] <- "Activity"
 
 #narrowTest<-melt(test, id.vars =  c("Subject","Activity"),variable.name ="Feature")
 #head(narrowTest,31)
